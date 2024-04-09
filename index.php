@@ -20,9 +20,9 @@ function testIsEven() {
 
         echo "Testing isEven($number): ";
         if ($result === $expectedResult) {
-            echo "Passed<br>";
+            echo "Passed +++++ <br>";
         } else {
-            echo "Failed. Expected: " . ($expectedResult ? 'true' : 'false') . ". Got: " . ($result ? 'true' : 'false') . "<br>";
+            echo "Failed -----. Expected: " . ($expectedResult ? 'true' : 'false') . ". Got: " . ($result ? 'true' : 'false') . "<br>";
         }
     }
 }
