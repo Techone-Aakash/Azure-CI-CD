@@ -1,27 +1,86 @@
+# trigger:
+#   branches:
+#     include:
+#       - master
+
+# jobs:
+# - job: BuildAndRunDocker
+#   displayName: 'Build and Run Docker Image'
+#   pool:
+#     vmImage: 'ubuntu-latest'
+
+#   steps:
+#   - task: UsePythonVersion@0
+#     inputs:
+#       versionSpec: '3.x'
+#       addToPath: true
+
+#   - script: |
+#       # Build Docker image
+#       docker build -t my-php-app:latest .
+#     displayName: 'Build Docker Image'
+
+#   - script: |
+#       # Run the Docker container locally
+#       docker run -dp 8000:50 --name php-container --rm my-php-app:latest
+#     displayName: 'Run Docker Container'
+
+
 trigger:
-  branches:
-    include:
-      - master
+- master
+   
+pool:
+  vmImage: 'ubuntu-latest'
 
-jobs:
-- job: BuildAndRunDocker
-  displayName: 'Build and Run Docker Image'
-  pool:
-    vmImage: 'ubuntu-latest'
+variables:
+  imageName: 'my-php-app'
+  DOCKER_BUILDKIT: 1
 
-  steps:
-  - task: UsePythonVersion@0
-    inputs:
-      versionSpec: '3.x'
-      addToPath: true
+steps:
+- task: Docker@2
+  displayName: Build an image
+  inputs:
+    repository: $(imageName)
+    command: build
+    Dockerfile: app/Dockerfile
 
-  - script: |
-      # Build Docker image
-      docker build -t my-php-app:latest .
-    displayName: 'Build Docker Image'
 
-  - script: |
-      # Run the Docker container locally
-      docker run -dp 8000:50 --name php-container --rm my-php-app:latest
-    displayName: 'Run Docker Container'
-
+# name : Docker-CI
+# trigger:
+#   branches:
+#     include:
+#       - master
+ 
+# pool:
+#   vmImage: 'ubuntu-latest'
+ 
+# variables:
+#   ImageName: 'wolfgangofner/microservicedemo:$(Build.BuildId)'
+ 
+# stages:
+# - stage: Build
+#   displayName: Build image
+#   jobs:  
+#   - job: Build
+#     displayName: Build and push Docker image
+#     steps:
+#     - task: Docker@1
+#       displayName: 'Build the Docker image'
+#       inputs:
+#         containerregistrytype: 'Container Registry'
+#         dockerRegistryEndpoint: 'Docker Hub'
+#         command: 'Build an image'
+#         dockerFile: '**/Dockerfile'
+#         imageName: '$(ImageName)'
+#         includeLatestTag: true
+#         useDefaultContext: false
+#         buildContext: '.'
+     
+#     - task: Docker@1
+#       displayName: 'Push the Docker image to Dockerhub'
+#       inputs:
+#         containerregistrytype: 'Container Registry'
+#         dockerRegistryEndpoint: 'Docker Hub'
+#         command: 'Push an image'
+#         imageName: '$(ImageName)'
+#       condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
