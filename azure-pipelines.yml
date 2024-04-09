@@ -26,23 +26,23 @@
 #     displayName: 'Run Docker Container'
 
 
-trigger:
-- master
+# trigger:
+# - master
    
-pool:
-  vmImage: 'ubuntu-latest'
+# pool:
+#   vmImage: 'ubuntu-latest'
 
-variables:
-  imageName: 'my-php-app'
-  DOCKER_BUILDKIT: 1
+# variables:
+#   imageName: 'my-php-app'
+#   DOCKER_BUILDKIT: 1
 
-steps:
-- task: Docker@2
-  displayName: Build an image
-  inputs:
-    repository: $(imageName)
-    command: build
-    Dockerfile: app/Dockerfile
+# steps:
+# - task: Docker@2
+#   displayName: Build an image
+#   inputs:
+#     repository: $(imageName)
+#     command: build
+#     Dockerfile: app/Dockerfile
 
 
 # name : Docker-CI
@@ -84,3 +84,22 @@ steps:
 #         command: 'Push an image'
 #         imageName: '$(ImageName)'
 #       condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
+
+
+
+name : Docker-CI
+trigger:
+- master
+   
+pool:
+  vmImage: 'ubuntu-latest'
+
+variables:
+  imageName: 'my-php-app'
+  DOCKER_BUILDKIT: 1
+
+steps: 
+- task: Bash@3
+  inputs:
+    targetType: 'inline'
+    script: 'docker build -t my-php-app:latest -f Dockerfile .'
